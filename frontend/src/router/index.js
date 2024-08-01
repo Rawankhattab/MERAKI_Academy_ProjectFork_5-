@@ -136,11 +136,6 @@ export const router = createBrowserRouter([
          ]
     }
    ,
- /*{
-  path: 'cart',
-    element: <Cart />,
-  }*/
-
  { path: "my_cart",
    element: <Mycart />,
  }
@@ -148,3 +143,7 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
+
+
+
+g

@@ -12,11 +12,17 @@ import {
 import axios from "axios";
 
 
+
+
 const GetAllRegister = () => {
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
   
-  const token = useSelector((state) => state.auth.token);
+  const { token, role } = useSelector((state) => ({
+    token: state.auth.token,
+    role: state.auth.role
+  }));
+
 
   const fetchUsers = async () => {
     try {
@@ -34,6 +40,7 @@ const GetAllRegister = () => {
   };
 
   useEffect(() => {
+    if(role == "Admin")
     fetchUsers();
   }, []);
 
@@ -69,6 +76,7 @@ const GetAllRegister = () => {
   };
 
   return (
+    <>
     <Container
       maxWidth="lr"
       sx={{
@@ -81,7 +89,7 @@ const GetAllRegister = () => {
         borderRadius: "8px",
       }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h5" gutterBottom>
         All Riders Registration Pending
       </Typography>
       <List sx={{ width: "100%" }}>
@@ -123,7 +131,7 @@ const GetAllRegister = () => {
               </Button>
               <Button
                 onClick={() => rejectPendingRiders(user.id)}
-                variant="outlined"
+                variant="contained"
                 color="error"
               >
                 Reject
@@ -133,7 +141,11 @@ const GetAllRegister = () => {
         ))}
       </List>
     </Container>
+    
+    </>
   );
 };
+
+
 
 export default GetAllRegister;

@@ -1,79 +1,82 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { Typography, Box, Container, TextField, Button } from '@mui/material';
+import { TextField, Button, Container, Box, Typography } from '@mui/material';
 
-const Owner = () => {
+const UpdateItem = () => {
+  const { id } = useParams();
   const token = useSelector(state => state.auth.token);
-  const [restaurant, setRestaurant] = useState({
+  const [item, setItem] = useState({
     name: '',
-    address: '',
-    phone_number: '',
-    category: '',
-    delivery_fees: '',
+    description: '',
+    price: '',
+    sub_category: '',
+    available: true,
     image_url: ''
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getRestaurantInfo = async () => {
+    const getItemInfo = async () => {
       try {
-        const result = await axios.get("http://localhost:5000/restaurants/RestaurantById", {
+        const result = await axios.get(`http://localhost:5000/items/getItemById/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setRestaurant(result.data.result);
+        setItem(result.data.result);
       } catch (error) {
-        setMessage('Error getting restaurant information. Please try again later.');
+        setMessage('Error loading item information.');
       }
     };
-
-    getRestaurantInfo();
-  }, [token]);
+    getItemInfo();
+  }, [id, token]);
 
   const handleChange = (e) => {
-    setRestaurant({ ...restaurant, [e.target.name]: e.target.value });
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setItem({ ...item, image_url: files[0] });
+    } else {
+      setItem({ ...item, [name]: value });
+    }
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    Object.keys(item).forEach((key) => {
+      formData.append(key, item[key]);
+    });
     try {
-      const result = await axios.put("http://localhost:5000/restaurants/updateRestaurant", restaurant, {
+      const result = await axios.put(`http://localhost:5000/items/updateItems/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       });
-      setMessage('Restaurant updated successfully!');
-      setRestaurant(result.data.result);
+      setMessage('Item updated successfully!');
+      navigate('/restaurant_owner/view-item');
     } catch (error) {
-      setMessage('Error updating restaurant information. Please try again later.');
+      setMessage('Error updating item.');
     }
   };
 
   return (
     <Container maxWidth="md">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          backgroundColor: '#424242',
-          padding: 3,
-          borderRadius: 2
-        }}
-      >
-        <Typography component="h1" variant="h5" sx={{ color: 'white', marginBottom: 2 }}>Restaurant Dashboard</Typography>
+      <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography component="h1" variant="h5">Update Item</Typography>
         {message && <Typography color="error">{message}</Typography>}
-        <Box component="form" sx={{ mt: 3 }}>
+        <Box component="form" sx={{ mt: 3 }} onSubmit={handleUpdate}>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
             name="name"
-            label="Restaurant Name"
-            value={restaurant.name}
+            label="Item Name"
+            value={item.name}
             onChange={handleChange}
             InputProps={{ style: { color: 'white' } }}
             InputLabelProps={{ style: { color: 'white' } }}
@@ -82,12 +85,13 @@ const Owner = () => {
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
-            name="address"
-            label="Address"
-            value={restaurant.address}
+            name="description"
+            label="Description"
+            value={item.description}
             onChange={handleChange}
+            multiline
+            rows={4}
             InputProps={{ style: { color: 'white' } }}
             InputLabelProps={{ style: { color: 'white' } }}
             sx={{ marginBottom: 2 }}
@@ -95,38 +99,11 @@ const Owner = () => {
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
-            name="phone_number"
-            label="Phone Number"
-            value={restaurant.phone_number}
-            onChange={handleChange}
-            InputProps={{ style: { color: 'white' } }}
-            InputLabelProps={{ style: { color: 'white' } }}
-            sx={{ marginBottom: 2 }}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="category"
-            label="Category"
-            value={restaurant.category}
-            onChange={handleChange}
-            InputProps={{ style: { color: 'white' } }}
-            InputLabelProps={{ style: { color: 'white' } }}
-            sx={{ marginBottom: 2 }}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="delivery_fees"
-            label="Delivery Fees"
+            name="price"
+            label="Price"
             type="number"
-            value={restaurant.delivery_fees}
+            value={item.price}
             onChange={handleChange}
             InputProps={{ style: { color: 'white' } }}
             InputLabelProps={{ style: { color: 'white' } }}
@@ -136,26 +113,50 @@ const Owner = () => {
             variant="outlined"
             margin="normal"
             fullWidth
-            name="image_url"
-            label="Image URL"
-            value={restaurant.image_url}
+            name="sub_category"
+            label="Sub Category"
+            value={item.sub_category}
             onChange={handleChange}
             InputProps={{ style: { color: 'white' } }}
             InputLabelProps={{ style: { color: 'white' } }}
+            sx={{ marginBottom: 2 }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            name="available"
+            label="Available"
+            value={item.available ? "Available" : "Not Available"}
+            onChange={handleChange}
+            InputProps={{ style: { color: 'white' } }}
+            InputLabelProps={{ style: { color: 'white' } }}
+            sx={{ marginBottom: 2 }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            name="image"
+            label="Item Image"
+            type="file"
+            onChange={handleChange}
+            InputLabelProps={{ style: { color: 'white' } }}
+            sx={{ marginBottom: 2 }}
           />
           <Button
-            type="button"
+            type="submit"
             fullWidth
             variant="contained"
-            onClick={handleUpdate}
-            sx={{ mt: 3, mb: 2, backgroundColor: '#1976d2' }}
+            sx={{ mt: 3, mb: 2 }}
+            style={{ color: 'white' }}
           >
-            Update Information
+            Update Item
           </Button>
         </Box>
       </Box>
     </Container>
   );
-};
+}
 
-export default Owner;
+export default UpdateItem;

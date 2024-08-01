@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLogout } from '../redux/auth';
-
+import TemporaryDrawer from "../pages/Admin/SideBar" ; 
 const Header = () => {
   const token = useSelector((state) => state.auth.token);
   const role = useSelector((state) => state.auth.role);
@@ -32,17 +32,18 @@ const Header = () => {
               <Button sx={{ color: 'white' }} component={Link} to="/signup">
                 Sign Up
               </Button>
+              <Button sx={{ color: 'white' }} component={Link} to="/become-partner">
+            Become a Partner
+          </Button>
+          <Button sx={{ color: 'white' }} component={Link} to="/become-rider">
+            Become a Rider
+          </Button>
             </>
           ) : (
             <>
               {role === 'Admin' && (
                 <>
-                  <Button sx={{ color: 'white' }} component={Link} to="/get_All_Rider">
-                    Get All Riders
-                  </Button>
-                  <Button sx={{ color: 'white' }} component={Link} to="/get_All_Owner">
-                    Get All Owners
-                  </Button>
+                <TemporaryDrawer />
                 </>
               )}
               {role === 'Restaurant Owner' && (
@@ -51,21 +52,36 @@ const Header = () => {
                 </Button>
               )}
                   {role === 'Customer' && (
-                <Button sx={{ color: 'white' }} component={Link} to="/my_cart">
-                  My Cart
+                    <Button sx={{ color: 'white' }} component={Link} to="/userOrders">
+                    My Orders
+                  </Button>
+              )}
+            
+              {role === 'Rider' && (
+                <>
+                <Button sx={{ color: 'white' }} component={Link} to="/rider/Profile">
+                 Profile
                 </Button>
+                  <Button sx={{ color: 'white' }} component={Link} to="/rider/All_complete_order">
+                 Complete Orders
+                 </Button>
+                   <Button sx={{ color: 'white' }} component={Link} to="/rider/All_delivered_order">
+                   Delivered Orders
+                  </Button>
+                    <Button sx={{ color: 'white' }} component={Link} to="/rider/All__order_on_way">
+                    Oreder On Way
+                   </Button>
+                   <Button sx={{ color: 'white' }} component={Link} to="rider">
+                    Ready Orders
+                   </Button>
+                  </> 
               )}
               <Button sx={{ color: 'white' }} onClick={handleLogout}>
                 Sign Out
               </Button>
             </>
           )}
-          <Button sx={{ color: 'white' }} component={Link} to="/become-partner">
-            Become a Partner
-          </Button>
-          <Button sx={{ color: 'white' }} component={Link} to="/become-rider">
-            Become a Rider
-          </Button>
+      
         </Box>
       </Toolbar>
     </AppBar>
