@@ -1,6 +1,23 @@
 const pool = require("../models/db");
 
 
+const getavgReviewsForRestaurant = async (req, res) => {
+  const restaurant_id = req.params.id;
+  
+  try {
+    // Get reviews along with average rating
+    const reviewsQuery = `SELECT *, (SELECT AVG(rating) FROM reviews WHERE restaurant_id = $1) as average_rating FROM reviews WHERE restaurant_id = $1`;
+    const result = await pool.query(reviewsQuery, [restaurant_id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "No reviews found for this restaurant" });
+    }
+
+    return res.status(200).json({ success: true, data: result.rows, average_rating: result.rows[0].average_rating });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: "Server error", err });
+  }
+};
 
 
 const getReviewsForRestaurant = async (req, res) => {
@@ -76,4 +93,4 @@ const getReviewsForRestaurant = async (req, res) => {
     }
   };
 
-  module.exports={getReviewsForRestaurant,getReviewById,createReview,updateRestaurantAverageRating}
+  module.exports={getReviewsForRestaurant,getavgReviewsForRestaurant,getReviewById,createReview,updateRestaurantAverageRating}
