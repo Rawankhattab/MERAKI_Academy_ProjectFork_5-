@@ -31,10 +31,14 @@ const googleLogin = async (req, res) => {
         [name, email, customerRole]
       );
       userResult = newUserResult;
+      const cart = await pool.query(
+        `INSERT INTO carts (user_id) VALUES($1) RETURNING *`,
+        [userResult.rows[0].id]
+      );
     }
 
     const user = userResult.rows[0];
-
+  
     const payload = {
       userId: user.id,
       user: user.name,
@@ -423,6 +427,32 @@ const getAllRiderReqForTheAdmin = async (req, res) => {
   }
 };
 
+const getUserById= async (req ,res)=>{
+  const id = req.params.id;
+  try {
+    const userResult = await pool.query(
+      "SELECT * FROM users WHERE id = $1 AND deleted_at = false",
+      [id]
+    );
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      user: userResult.rows[0],
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
+  }
+}
+
 const getAllResReqForTheAdmin = async (req, res) => {
   try {
     const resResult = await pool.query(
@@ -650,4 +680,5 @@ module.exports = {
   acceptReqRider,
   acceptReqRes,
   googleLogin,
+  getUserById
 };

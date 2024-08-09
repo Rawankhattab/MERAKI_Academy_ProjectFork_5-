@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { TextField, Button, Container, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Box,
+  Typography,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 const UpdateRestaurantInfo = () => {
   const token = useSelector((state) => state.auth.token);
@@ -12,6 +22,7 @@ const UpdateRestaurantInfo = () => {
     category: "",
     delivery_fees: "",
     image_url: "",
+    status: "open",
   });
   const [message, setMessage] = useState("");
 
@@ -22,7 +33,7 @@ const UpdateRestaurantInfo = () => {
   const handleUpdate = async () => {
     try {
       const result = await axios.put(
-        "http://localhost:5000/restaurants/updateRestaurant",
+        "https://meraki-academy-project-5-1jun.onrender.com/restaurants/updateRestaurant",
         restaurant,
         {
           headers: {
@@ -32,6 +43,8 @@ const UpdateRestaurantInfo = () => {
       );
       setMessage("Restaurant updated successfully!");
       setRestaurant(result.data.result);
+
+      window.location.reload();
     } catch (error) {
       setMessage(
         "Error updating restaurant information. Please try again later."
@@ -40,7 +53,7 @@ const UpdateRestaurantInfo = () => {
   };
 
   return (
-    <Container maxWidth="md" style={{height:"700px" , background:"white"}}>
+    <Container maxWidth="md" style={{}}>
       <Box
         sx={{
           width: "100%",
@@ -56,6 +69,8 @@ const UpdateRestaurantInfo = () => {
           alignItems: "center",
           maxWidth: "500px",
           marginBottom: "50px",
+          position:"relative",
+          left:"150px",
         }}
       >
         <Typography
@@ -143,7 +158,24 @@ const UpdateRestaurantInfo = () => {
             onChange={handleChange}
             InputProps={{ style: { color: "black" } }}
             InputLabelProps={{ style: { color: "black" } }}
+            sx={{ marginBottom: 2 }}
           />
+
+          <FormControl fullWidth sx={{ marginBottom: 2 }}>
+            <InputLabel>Status</InputLabel>
+            <Select
+              name="status"
+              value={restaurant.status}
+              onChange={handleChange}
+              label="Status"
+              sx={{ color: "black" }}
+            >
+              <MenuItem value="open">Open</MenuItem>
+              <MenuItem value="closed">Closed</MenuItem>
+              <MenuItem value="busy">Busy</MenuItem>
+            </Select>
+          </FormControl>
+
           <Button
             type="button"
             fullWidth

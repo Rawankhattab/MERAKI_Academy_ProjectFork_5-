@@ -27,7 +27,7 @@ const MessageRider = ({ socket, user_id }) => {
   // console.log(userId);
   const getRiderById = () => {
     axios
-      .get(`http://localhost:5000/riders/${userId}`)
+      .get(`https://meraki-academy-project-5-1jun.onrender.com/riders/${userId}`)
       .then((result) => {
         setName(result.data.result.first_name);
       })
@@ -64,7 +64,7 @@ const MessageRider = ({ socket, user_id }) => {
   return (
     <>
     <Box sx={{
-      width: '100%',
+      width: '400px',
       height: "400px",
       border: '1px solid #ccc',
       borderRadius: 2,
@@ -114,7 +114,8 @@ const MessageRider = ({ socket, user_id }) => {
      <Paper
      style={{ padding: "20px", marginBottom: "20px", marginTop: "20px" }}
    >
-     <Box display="flex" alignItems="center">
+     <Box sx={{
+      width: '400px'}} display="flex" alignItems="center">
        <TextField
          fullWidth
          label="Message"

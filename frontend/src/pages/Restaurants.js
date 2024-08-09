@@ -43,7 +43,7 @@ function Restaurants() {
 
   const fetchAllRestaurants = () => {
     axios
-      .get("http://localhost:5000/restaurants/")
+      .get("https://meraki-academy-project-5-1jun.onrender.com/restaurants/")
       .then((result) => {
         setRestaurants(result.data.result);
         setLoading(false);
@@ -57,7 +57,7 @@ function Restaurants() {
 
   const categorySearch = (text) => {
     axios
-      .get(`http://localhost:5000/restaurants/byCategory/${text}`)
+      .get(`https://meraki-academy-project-5-1jun.onrender.com/restaurants/byCategory/${text}`)
       .then((result) => {
         setRestaurants(result.data.result);
       })
@@ -69,7 +69,7 @@ function Restaurants() {
 
   const filteredRestaurantsByDeliveryFees = () => {
     axios
-      .get(`http://localhost:5000/restaurants/getAllRestaurantByDeliveryFees`)
+      .get(`https://meraki-academy-project-5-1jun.onrender.com/restaurants/getAllRestaurantByDeliveryFees`)
       .then((result) => {
         setRestaurants(result.data.result);
       })
@@ -106,7 +106,7 @@ function Restaurants() {
     );
 
   return (
-    <div style={{ padding: "20px"}}>
+    <div style={{ padding: "20px" }}>
       <Box
         display="flex"
         alignItems="center"
@@ -123,7 +123,11 @@ function Restaurants() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           InputProps={{
-            startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment>,
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
             endAdornment: search && (
               <InputAdornment position="end">
                 <IconButton onClick={() => setSearch("")} edge="end">
@@ -165,7 +169,13 @@ function Restaurants() {
           variant="contained"
           size="large"
           onClick={filteredRestaurantsByDeliveryFees}
-          sx={{ color: 'white',  backgroundColor: "#2E7D32", fontWeight: '500', borderRadius: '20px', '&:hover': { backgroundColor: '#388e3c', color: '#ffd700' } }}
+          sx={{
+            color: "white",
+            backgroundColor: "#2E7D32",
+            fontWeight: "500",
+            borderRadius: "20px",
+            "&:hover": { backgroundColor: "#388e3c", color: "#ffd700" },
+          }}
         >
           Sort Low Fees
         </Button>
@@ -175,13 +185,29 @@ function Restaurants() {
           {filteredRestaurants.map((elem, i) => (
             <Grid item xs={12} sm={6} md={4} key={i}>
               <Card
-                onClick={() => navigate(`/one/${elem.id}`)}
+                onClick={() => {
+                  if (elem.status !== "busy" && elem.status !== "closed") {
+                    navigate(`/one/${elem.id}`);
+                  }
+                }}
                 sx={{
                   minWidth: 300,
                   borderRadius: 3,
                   boxShadow: 3,
                   transition: "transform 0.3s",
-                  "&:hover": { transform: "scale(1.05)" },
+                  height: "400px",
+                  "&:hover": {
+                    transform:
+                      elem.status !== "busy" && elem.status !== "closed"
+                        ? "scale(1.05)"
+                        : "none",
+                  },
+                  backgroundColor:
+                    elem.status === "closed"
+                      ? "#f8d7da"
+                      : elem.status === "busy"
+                      ? "#fff3cd"
+                      : "inherit",
                 }}
               >
                 <CardContent>
@@ -191,9 +217,9 @@ function Restaurants() {
                       alt={elem.name}
                       style={{
                         width: "100%",
-                        height: "auto",
+                        height: "270px",
                         borderRadius: "8px",
-                        maxHeight: "300px",
+                        maxHeight: "270px",
                         objectFit: "cover",
                       }}
                     />
@@ -211,6 +237,21 @@ function Restaurants() {
                   <Typography variant="body2" color="text.secondary">
                     <strong>Category:</strong> {elem.category}
                   </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      fontWeight: "bold",
+                      color:
+                        elem.status === "closed"
+                          ? "red"
+                          : elem.status === "busy"
+                          ? "orange"
+                          : "green",
+                    }}
+                  >
+                    <strong>Status:</strong> {elem.status}
+                  </Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -221,4 +262,4 @@ function Restaurants() {
   );
 }
 
-export default Restaurants
+export default Restaurants;

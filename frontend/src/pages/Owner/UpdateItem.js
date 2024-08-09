@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { TextField, Button, Container, Box, Typography } from '@mui/material';
+import { TextField, Button, Container, Box, Typography, Checkbox, FormControlLabel } from '@mui/material';
 
 const UpdateItem = () => {
   const { id } = useParams();
@@ -21,7 +21,7 @@ const UpdateItem = () => {
   useEffect(() => {
     const getItemInfo = async () => {
       try {
-        const result = await axios.get(`http://localhost:5000/items/getItemById/${id}`, {
+        const result = await axios.get(`https://meraki-academy-project-5-1jun.onrender.com/items/getItemById/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,9 +35,11 @@ const UpdateItem = () => {
   }, [id, token]);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files, type, checked } = e.target;
     if (name === "image") {
       setItem({ ...item, image_url: files[0] });
+    } else if (name === "available") {
+      setItem({ ...item, available: checked });
     } else {
       setItem({ ...item, [name]: value });
     }
@@ -50,7 +52,7 @@ const UpdateItem = () => {
       formData.append(key, item[key]);
     });
     try {
-      const result = await axios.put(`http://localhost:5000/items/updateItems/${id}`, formData, {
+      const result = await axios.put(`https://meraki-academy-project-5-1jun.onrender.com/items/updateItems/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
@@ -121,17 +123,17 @@ const UpdateItem = () => {
             InputLabelProps={{ style: { color: 'black' } }}
             sx={{ marginBottom: 2 }}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="available"
+          <FormControlLabel
+            control={
+              <Checkbox
+                name="available"
+                checked={item.available}
+                onChange={handleChange}
+                sx={{ color: 'black' }}
+              />
+            }
             label="Available"
-            value={item.available ? "Available" : "Not Available"}
-            onChange={handleChange}
-            InputProps={{ style: { color: 'black' } }}
-            InputLabelProps={{ style: { color: 'black' } }}
-            sx={{ marginBottom: 2 }}
+            sx={{ color: 'black' }}
           />
           <TextField
             variant="outlined"
