@@ -106,14 +106,14 @@ function Restaurants() {
     );
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px"}}>
       <Box
         display="flex"
         alignItems="center"
         justifyContent="space-between"
         mb={3}
         p={1}
-        bgcolor="white"
+        bgcolor=""
         boxShadow={2}
         borderRadius={2}
       >

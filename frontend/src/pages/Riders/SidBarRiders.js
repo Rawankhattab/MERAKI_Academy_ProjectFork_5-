@@ -19,67 +19,69 @@ const TemporaryDrawer = () => {
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
+  
+const Profile = () => {
+  navigate("rider/profile");
+ };
 
-  const handelRiderRegistration = () => {
-    navigate("/admin/get_All_Rider_Registration");
+ const handelAllOrderReady = () => {
+    navigate("/rider/ready");
+};
+
+  const handelAllOnTheWay = () => {
+    navigate("rider/All__order_on_way");
   };
-  const handelUser = () => {
-    navigate("/admin/get_all_users");
+  const handelAllDeliveredOrder = () => {
+    navigate("rider/All_delivered_order");
   };
-  const handelRider = () => {
-    navigate("admin/get_all_riders");
-  };
-  const handelAllRestaurants = () => {
-    navigate("admin/get_all_restaurants");
-  };
-  const handelOwnerRegistration = () => {
-    navigate("admin/get_All_registration_Owner");
+  const handelAllCompletedOrder = () => {
+    navigate("rider/All_complete_order");
   };
   const DrawerList = (
     <Box sx={{ width: 300 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={handelUser}>
+          <ListItemButton onClick={Profile}>
             <ListItemIcon>
               <PersonIcon />
             </ListItemIcon>
-            <ListItemText primary={"get all users"} />
+            <ListItemText primary={"Profile"} />
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton onClick={handelRider}>
+          <ListItemButton onClick={handelAllOrderReady}>
             <ListItemIcon>
               <TwoWheelerIcon />
             </ListItemIcon>
-            <ListItemText primary={"get all riders"} />
+            <ListItemText primary={"ready to pick up orders"} />
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton onClick={handelAllRestaurants}>
+          <ListItemButton onClick={handelAllOnTheWay}>
             <ListItemIcon>
               <RestaurantIcon />
             </ListItemIcon>
-            <ListItemText primary={"get all Restaurants"} />
+            <ListItemText primary={"Accepted Orders"} />
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton onClick={handelOwnerRegistration}>
+          <ListItemButton onClick={handelAllDeliveredOrder}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary={"get all owner Registration pending"} />
+            <ListItemText primary={"on the way orders"} />
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton onClick={handelRiderRegistration}>
+          <ListItemButton onClick={handelAllCompletedOrder}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary={"get all riders Registration pending"} />
+            <ListItemText primary={"orders history"} />
           </ListItemButton>
         </ListItem>
       </List>
@@ -91,14 +93,15 @@ const TemporaryDrawer = () => {
     <div>
       <Button
         component={Link}
-        to="/admin"
+        to="/rider"
         sx={{ color: "white" }}
         compone
         onClick={toggleDrawer(true)}
       >
-Admin Dashboard      </Button>
+        Riders Dashbord
+      </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
-        {DrawerList}
+       {DrawerList}
       </Drawer>
     </div>
   );

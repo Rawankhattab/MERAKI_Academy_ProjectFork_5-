@@ -7,9 +7,8 @@ const Owner = () => {
  
 
   return (
-    <Box sx={{ display: 'flex', background:"#d0d3d8" }}>
+    <Box sx={{ display: 'flex', background:"#FFF1F1" }}>
       <CssBaseline />
-      <Sidebar />
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3 }}

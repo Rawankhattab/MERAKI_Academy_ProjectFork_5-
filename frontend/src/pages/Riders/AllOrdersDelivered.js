@@ -1,6 +1,6 @@
 import axios from "axios";
-import socketInit from "../socketServer"
-import MessageRider from "../MessageToRider"
+import socketInit from "../socketServer";
+import MessageRider from "../MessageToRider";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -48,7 +48,7 @@ const AllOrdersDelivered = () => {
         }
       );
       setOrders(result.data.result);
-      // adding user id 
+      // adding user id
       setUser(result.data.result[0].user_id);
       console.log();
     } catch (err) {
@@ -87,7 +87,7 @@ const AllOrdersDelivered = () => {
       console.log(err);
     }
   };
-  
+
   const accept = async () => {
     setOpen(false);
     try {
@@ -110,7 +110,7 @@ const AllOrdersDelivered = () => {
       console.log(err);
     }
   };
-console.log(orders);
+  console.log(orders);
   const handleClose = () => {
     setOpen(false);
   };
@@ -120,16 +120,17 @@ console.log(orders);
         <Container maxWidth="la">
           <Paper style={{ padding: "20px", marginBottom: "20px" }}>
             <Typography variant="h5" gutterBottom>
-              All Orders Delivered
-            </Typography>
+On the Way Orders            </Typography>
 
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
                   <TableRow>
                     <TableCell>Restaurant</TableCell>
-                    <TableCell>Address</TableCell>
+                    <TableCell>delivery_address</TableCell>
                     <TableCell>Total</TableCell>
+                    <TableCell>payment_method</TableCell>
+
                     <TableCell>Status</TableCell>
                   </TableRow>
                 </TableHead>
@@ -141,8 +142,9 @@ console.log(orders);
                       hover
                     >
                       <TableCell>{order.name}</TableCell>
-                      <TableCell>{order.address}</TableCell>
+                      <TableCell>{order.delivery_address}</TableCell>
                       <TableCell>{order.total_price}</TableCell>
+                      <TableCell>{order.payment_method}</TableCell>
                       <TableCell>{order.status}</TableCell>
                     </TableRow>
                   ))}
@@ -202,18 +204,20 @@ console.log(orders);
               Close
             </Button>
             <Button onClick={accept} color="primary">
-              Accept
+              set to Delivered
             </Button>
           </DialogActions>
         </Dialog>
-        <div>
-          <button
+        <div style={{ marginTop: "20px", marginLeft:"23px" }}>
+          <Button
+            variant="contained"
+            color="primary"
             onClick={() => {
               setSocket(socketInit({ rider_id: rider_id, userId: userId }));
             }}
           >
-            connect
-          </button>
+            Chat To Customer
+          </Button>
           {isConnected && <MessageRider socket={socket} user_id={user} />}
         </div>
       </>

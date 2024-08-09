@@ -9,7 +9,10 @@ import {
   CardContent,
   CardMedia,
   CircularProgress,
-  Button 
+  Button,
+  Paper,
+  Grid,
+  Avatar
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -69,18 +72,25 @@ const ViewRestaurantInfo = () => {
 
   if (!restaurant && !message) {
     return (
-      <Container>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh",
-          }}
-        >
-          <CircularProgress size={80} />
-        </Box>
+      <Container style={{ height: "700px" }}>
+        <Typography variant="h5" color="error">
+          {message}
+        </Typography>
+        <Typography variant="h6">Loading...</Typography>
+
+        <Container>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100vh",
+            }}
+          >
+            <CircularProgress size={80} />
+          </Box>
+        </Container>
       </Container>
     );
   }
@@ -123,11 +133,7 @@ const ViewRestaurantInfo = () => {
             <DetailTypography variant="h6" sx={{ wordBreak: 'break-all' }}>
               <strong>Image URL:</strong> {restaurant.image_url}
             </DetailTypography>
-            <Box sx={{ textAlign: 'center', marginTop: 3 }}>
-              <Button variant="outlined" color="primary" onClick={() => window.open(restaurant.image_url, "_blank")}>
-                View Image
-              </Button>
-            </Box>
+        
           </CardContent>
         </Card>
       )}
